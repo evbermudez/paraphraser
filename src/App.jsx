@@ -1,9 +1,15 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import 'tailwindcss/tailwind.css';
-import './App.css'
-import openai from 'openai';
+import './App.css';
+import axios from 'axios';
+import { Configuration, OpenAIApi } from "openai";
 
 function App() {
+  const configuration = new Configuration({
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  });
+
+  const openai = new OpenAIApi(configuration);
   const [originalText, setOriginalText] = useState('');
   const [paraphrase, setParaphrase] = useState('');
 
@@ -15,14 +21,31 @@ function App() {
 
   const paraphraseText = async (originalText) => {
     const prompt = `Paraphrase the following text: ${originalText}\nParaphrase:`;
-    const completions = await openai.complete('text-davinci-002', {
-      prompt,
-      max_tokens: 60,
-      n: 1,
-      stop: ['\n'],
-    });
-    const paraphrase = completions.choices[0].text.trim();
-    return paraphrase;
+  
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        prompt,
+        max_tokens: 60,
+        n: 1,
+        stop: ['\n'],
+        engine: 'davinci', // or 'curie' for the smaller model
+      }),
+    };
+  
+    try {
+      const response = await fetch('https://api.openai.com/v1/engines/davinci/completions', config);
+      const data = await response.json();
+      const paraphrase = data.choices[0].text.trim();
+      return paraphrase;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
   };
 
   return (
