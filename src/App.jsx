@@ -1,36 +1,53 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import 'tailwindcss/tailwind.css';
 import './App.css'
+import openai from 'openai';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [originalText, setOriginalText] = useState('');
+  const [paraphrase, setParaphrase] = useState('');
+
+  const handleParaphrase = async (event) => {
+    event.preventDefault();
+    const newParaphrase = await paraphraseText(originalText);
+    setParaphrase(newParaphrase);
+  };
+
+  const paraphraseText = async (originalText) => {
+    const prompt = `Paraphrase the following text: ${originalText}\nParaphrase:`;
+    const completions = await openai.complete('text-davinci-002', {
+      prompt,
+      max_tokens: 60,
+      n: 1,
+      stop: ['\n'],
+    });
+    const paraphrase = completions.choices[0].text.trim();
+    return paraphrase;
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="flex flex-col items-center justify-center h-screen">
+      <form onSubmit={handleParaphrase} className="mb-4">
+        <label>
+          Enter text to paraphrase:
+          <textarea
+            value={originalText}
+            onChange={(event) => setOriginalText(event.target.value)}
+            className="border border-gray-300 rounded p-2 mt-2"
+            rows={4}
+          />
+        </label>
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 mt-2 rounded">
+          Paraphrase
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+      </form>
+      {paraphrase && (
+        <p className="bg-gray-100 rounded p-4 mt-2">
+          Paraphrase: {paraphrase}
         </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
