@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import 'tailwindcss/tailwind.css';
-import './App.css';
+import './index.css';
+// import './App.css';
 import axios from 'axios';
 import { Configuration, OpenAIApi } from "openai";
 
@@ -33,7 +33,6 @@ function App() {
         max_tokens: 60,
         n: 1,
         stop: ['\n'],
-        engine: 'davinci', // or 'curie' for the smaller model
       }),
     };
   
@@ -49,21 +48,24 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <form onSubmit={handleParaphrase} className="mb-4">
-        <label>
+    <div className="flex flex-col items-center justify-center h-screen bg-slate-600">
+      <form onSubmit={handleParaphrase} className="mb-4 flex flex-col">
+        <label class="font-bold">
           Enter text to paraphrase:
-          <textarea
-            value={originalText}
-            onChange={(event) => setOriginalText(event.target.value)}
-            className="border border-gray-300 rounded p-2 mt-2"
-            rows={4}
-          />
         </label>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 mt-2 rounded">
-          Paraphrase
-        </button>
-      </form>
+          {/* <br /> */}
+          <textarea
+              value={originalText}
+              onChange={(event) => setOriginalText(event.target.value)}
+              className="border border-gray-300 rounded p-2 mt-2"
+              rows={4}
+            />
+            {/* <br /> */}
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 mt-2 rounded">
+            Paraphrase
+          </button>
+        </form>
+
       {paraphrase && (
         <p className="bg-gray-100 rounded p-4 mt-2">
           Paraphrase: {paraphrase}
