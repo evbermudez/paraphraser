@@ -20,6 +20,9 @@ node_modules/
 dist-ssr
 *.local
 
+#Env variables
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -33,3 +36,4 @@ dist-ssr
 
 # Miscellaneous
 /public/*
+
