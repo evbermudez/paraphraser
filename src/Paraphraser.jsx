@@ -58,6 +58,10 @@ function Paraphraser() {
             <p>{paraphrasedText}</p>
           </div>
         )}
+
+        <div className="mt-4 text-xs text-gray-500">
+          Powered by <a href="https://reactjs.org" target="_blank" rel="noopener noreferrer">React</a>, <a href="https://openai.com" target="_blank" rel="noopener noreferrer">OpenAI</a>, and <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind CSS</a>.
+        </div>
       </div>
     </div>
   );
